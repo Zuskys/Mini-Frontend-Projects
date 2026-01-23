@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<!--STYLES-->
+		<link href="https://fonts.googleapis.com/css2?family=Archivo&family=Pacifico&display=swap" rel="stylesheet" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+			integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"
+		/>
+		<link rel="stylesheet" href="styles.css" />
+		<title>My Todo List</title>
+	</head>
+	<body class="columns">
+		<main>
+			<section id="todo-ctnr" class="columns">
+				<h1>To-Do List</h1>
+				<div class="add-item-ctnr columns line-top">
+					<input type="text" id="input-item" placeholder="Add Task" />
+					<input type="button" id="add-btn" value="+" />
+				</div>
+				<div>
+					<ul id="show-todo" class="columns"></ul>
+				</div>
+				<div class="todo-footer line-top">
+					<p><span id="num-items">0</span> items</p>
+					<input type="button" id="del-all-btn" value="Delete All Items" />
+				</div>
+			</section>
+		</main>
+		<!--JAVASCRIPT-->
+		<script src="index.js"></script>
+	</body>
+</html>
