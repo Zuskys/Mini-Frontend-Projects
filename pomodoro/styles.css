@@ -1,15 +1,15 @@
 :root {
 	/*--- COLORS ---*/
-	--bg: hsl(210, 35%, 22%);
+	--bg: hsl(222, 51%, 28%);
 	--surface: hsla(222, 46%, 39%, 0.9);
 	--overlay: hsla(210, 28%, 35%, 0.25);
-	--border: hsla(0, 0%, 100%, 0.08);
+	--border: hsla(0, 0%, 100%, 0.302);
 	--text: hsl(0, 0%, 85%);
 	--heading: hsl(0, 0%, 100%);
 	--primary: hsl(185, 53%, 35%);
 	--primary-hover: hsl(185, 50%, 28%);
 	--accent: hsl(195, 80%, 40%);
-	--session-work: hsl(35, 88%, 51%);
+	--session-work: hsl(19, 90%, 64%);
 	--session-short-break: hsl(210, 35%, 22%);
 	--session-long-break: hsl(142, 66%, 39%);
 	--session-completed: hsl(142, 65%, 50%);
@@ -46,6 +46,7 @@ h1,
 h2,
 h3 {
 	color: var(--heading);
+	text-shadow: 1px 1px var(--accent);
 }
 .app-cont {
 	display: flex;
@@ -209,7 +210,7 @@ button {
 	width: var(--popup-width);
 	border: 1px solid var(--border);
 	border-radius: 12px;
-	background-color: var(--surface);
+	background-color: var(--bg);
 }
 
 #close-btn {
