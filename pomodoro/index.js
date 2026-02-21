@@ -4,6 +4,7 @@ const popUp = document.querySelector(".navbar");
 const modal = document.getElementById("modal");
 const saveBtn = document.getElementById("save-config");
 const clock = document.getElementById("clock");
+const session = document.getElementById("session-title");
 
 //If a conf exists, write it
 if (!localStorage.getItem("pomodoroConfig")) {
@@ -36,6 +37,17 @@ const showClock = () => {
 	clock.innerHTML = `${clockMin}:${clockSec}`;
 };
 
+//CYCLES TITLE
+const changeTitle = () => {
+	const cycle = document.getElementById("cycle-title");
+	const titles = {
+		focus: "Working...",
+		shortRest: "Take a Rest!",
+		longRest: "You did it!!",
+	};
+	session.classList.remove("hidden");
+	cycle.innerText = titles[mode] ?? "Working";
+};
 //CYCLES
 const updateCycle = () => {
 	cycles.forEach((cycle, i) => {
@@ -58,9 +70,15 @@ const nextCycle = () => {
 //START FUNCTION
 const startClock = () => {
 	clearInterval(pomo);
-	document.body.classList.toggle("rest", mode !== "focus");
-	isFocus = mode == "focus";
+	document.body.classList.remove("rest", "long-rest");
+	if (mode !== "focus") {
+		document.body.classList.add(mode === "longRest" ? "long-rest" : "rest");
+	}
+
+	isFocus = mode === "focus";
 	updateCycle();
+	changeTitle();
+
 	pomo = setInterval(() => {
 		timer--;
 		showClock();
@@ -101,6 +119,7 @@ const resetClock = () => {
 	mode = "focus";
 	isFocus = false;
 	document.body.classList.add("rest");
+	session.classList.add("hidden");
 	showClock();
 	updateCycle();
 };
@@ -146,6 +165,7 @@ saveBtn.addEventListener("click", () => {
 		showClock();
 	}
 	modal.classList.remove("is-open");
+	resetClock();
 });
 
 showClock();

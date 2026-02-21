@@ -1,74 +1,301 @@
 :root {
-	/*COLORS*/
-	--blue: rgb(154, 182, 206);
+	/*--- COLORS ---*/
+	--bg: hsl(210, 35%, 22%);
+	--surface: hsla(222, 46%, 39%, 0.9);
+	--overlay: hsla(210, 28%, 35%, 0.25);
+	--border: hsla(0, 0%, 100%, 0.08);
+	--text: hsl(0, 0%, 85%);
+	--heading: hsl(0, 0%, 100%);
+	--primary: hsl(185, 53%, 35%);
+	--primary-hover: hsl(185, 50%, 28%);
+	--accent: hsl(195, 80%, 40%);
+	--session-work: hsl(35, 88%, 51%);
+	--session-short-break: hsl(210, 35%, 22%);
+	--session-long-break: hsl(142, 66%, 39%);
+	--session-completed: hsl(142, 65%, 50%);
+
+	/*--- RESPONSIVE - mobile base ---*/
+	--clock-font: 5rem;
+	--title-font: 0.9rem;
+	--button-font: 0.8rem;
+	--wrapper-width: 100%;
+	--wrapper-padding: 0 1rem;
+	--main-padding: 2rem 1.5rem;
+	--popup-width: 90vw;
 }
-/*BASE*/
+
+/*--- BASE ---*/
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+	color: var(--text);
 }
 body {
-	display: flex;
-	align-items: center;
-	justify-content: center;
 	height: 100vh;
-	background-color: pink;
-	font-family: Arial, Helvetica, sans-serif;
-}
-.rest {
-	background-color: var(--blue);
-}
-/*SESSION CLYCLES*/
-.session-section {
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
+	justify-content: center;
 	align-items: center;
-	justify-content: space-around;
-	margin-bottom: 20px;
+	font-family: "Roboto Mono", monospace;
+	font-weight: 500;
+	background-color: var(--session-work);
+	transition: background-color 0.5s ease;
 }
-.cycle {
-	width: 40px;
-	height: 40px;
-	border: 2px solid black;
-	border-radius: 20px;
-	background-color: rgb(70, 70, 70);
+h1,
+h2,
+h3 {
+	color: var(--heading);
 }
-.actual {
-	background-color: rgb(255, 151, 47);
+.app-cont {
+	display: flex;
+	flex-direction: column;
+	width: var(--wrapper-width);
+	padding: var(--wrapper-padding);
+	gap: 0;
 }
-.completed {
-	background-color: green;
+/*Header*/
+header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 0 12px 0;
+}
+header h1 {
+	font-size: var(--title-font);
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	opacity: 0.75;
+}
+/*Main*/
+main {
+	display: flex;
+	flex-direction: column;
+	padding: var(--main-padding);
+	border-radius: 16px;
+	border: 1px solid var(--border);
+	background-color: var(--surface);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+}
+main h2 {
+	font-size: var(--title-font);
+	margin-bottom: 1rem;
+	text-align: center;
 }
 
-/*CLOCK*/
+body.rest {
+	background-color: var(--session-short-break);
+}
+body.long-rest {
+	background-color: var(--session-long-break);
+}
+
+.hidden {
+	display: none !important;
+}
+
+/*Animation*/
+@keyframes pulse {
+	0%,
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+	50% {
+		opacity: 0.4;
+		transform: scale(0.85);
+	}
+}
+
+/*--- NAVBAR / BUTTONS ---*/
+.navbar {
+	display: flex;
+	align-items: center;
+}
+.nav-btn {
+	padding: 6px 8px;
+	background: none;
+	border: none;
+	cursor: pointer;
+	color: var(--heading);
+	opacity: 0.7;
+	transition: opacity 0.2s ease;
+}
+.nav-btn:hover {
+	opacity: 1;
+}
+
+button {
+	font-family: inherit;
+	padding: 8px 20px;
+	border-radius: 6px;
+	border: none;
+	cursor: pointer;
+	transition: 0.2s ease;
+	font-size: 0.85rem;
+	letter-spacing: 0.05em;
+}
+
+#start-btn,
+#save-config {
+	background-color: var(--primary);
+	color: var(--heading);
+}
+
+#start-btn:hover,
+#save-config:hover {
+	background-color: var(--primary-hover);
+}
+
+#pause-btn,
+#reset-btn {
+	background-color: transparent;
+	border: 1px solid var(--border);
+	color: var(--text);
+}
+
+#pause-btn:hover,
+#reset-btn:hover {
+	background-color: var(--border);
+}
+
+/*--- CYCLES ---*/
+.session-section {
+	display: flex;
+	justify-content: center;
+	gap: 10px;
+	margin-bottom: 2rem;
+}
+.cycle {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	background-color: var(--border);
+	transition: background-color 0.3s ease;
+}
+
+.cycle.actual {
+	background-color: var(--session-work);
+	animation: pulse 1.4s ease-in-out infinite;
+}
+
+.cycle.completed {
+	background-color: var(--session-completed);
+}
+
+/*--- MODAL / OVERLAY ---*/
+.overlay {
+	display: none;
+	position: fixed;
+	inset: 0;
+	justify-content: center;
+	align-items: center;
+	z-index: 9;
+}
+
+.overlay.is-open {
+	display: flex;
+	background-color: var(--overlay);
+	backdrop-filter: blur(5px);
+}
+
+.popup {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+	padding: 2rem;
+	width: var(--popup-width);
+	border: 1px solid var(--border);
+	border-radius: 12px;
+	background-color: var(--surface);
+}
+
+#close-btn {
+	position: absolute;
+	top: 8px;
+	right: 8px;
+}
+
+.modal-title {
+	font-size: 1rem;
+	text-align: center;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	opacity: 0.7;
+	margin-bottom: 0.25rem;
+}
+
+.popup label {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	font-size: 0.875rem;
+	padding-bottom: 10px;
+	border-bottom: 1px solid var(--border);
+}
+
+.popup input {
+	width: 62px;
+	padding: 4px 8px;
+	text-align: center;
+	border: 1px solid var(--border);
+	border-radius: 4px;
+	background-color: var(--bg);
+	color: var(--text);
+	font-family: inherit;
+	font-size: 0.875rem;
+}
+#save-config {
+	margin-top: 0.25rem;
+	width: 100%;
+	padding: 10px;
+}
+/*--- CLOCK ---*/
 .time-section {
 	display: flex;
 	flex-direction: column;
-	margin-top: 20px;
-	width: 100%;
+	align-items: center;
+	justify-content: center;
+	gap: 2.5rem;
+	flex: 1;
 }
+
 #clock {
-	color: black;
-	font-size: 10rem;
-	background-color: var(--blue);
-	margin: 10px;
-	padding: 20px;
-	border-radius: 20px;
+	font-size: var(--clock-font);
+
+	letter-spacing: -0.02em;
+	color: var(--heading);
+	line-height: 1;
 }
+
 .buttons {
 	display: flex;
-	flex-direction: row;
-	align-items: center;
-	justify-content: space-between;
+	justify-content: center;
+	gap: 8px;
+	width: 100%;
 }
-.buttons button {
-	padding: 20px;
-	font-size: 1.2rem;
-	border: none;
-	border-radius: 5px;
-	transition: all ease-in 0.2s;
+/*--- MEDIA QUERIES ---*/
+@media (min-width: 480px) {
+	:root {
+		--clock-font: 6rem;
+		--title-font: 0.95rem;
+		--button-font: 0.85rem;
+		--wrapper-width: 420px;
+		--wrapper-padding: 0;
+		--main-padding: 2.5rem 2rem;
+		--popup-width: 320px;
+	}
 }
-.buttons button:hover {
-	background-color: var(--blue);
+@media (min-width: 768px) {
+	:root {
+		--clock-font: 7.5rem;
+		--title-font: 1.5rem;
+		--button-font: 1.2rem;
+		--wrapper-width: 480px;
+		--wrapper-padding: 0;
+		--main-padding: 3rem 2.5rem;
+		--popup-width: 300px;
+	}
 }
