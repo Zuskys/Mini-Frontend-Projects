@@ -1,11 +1,30 @@
 const cycles = document.querySelectorAll(".cycle");
 const buttonsCont = document.querySelector(".buttons");
+const popUp = document.querySelector(".navbar");
+const modal = document.getElementById("modal");
+const saveBtn = document.getElementById("save-config");
 const clock = document.getElementById("clock");
 
-let actualCycle = 0;
-let timer = 1500; // 25min
-let pomo;
+//If a conf exists, write it
+if (!localStorage.getItem("pomodoroConfig")) {
+	localStorage.setItem("pomodoroConfig", JSON.stringify({ timer: 1500, rest: 300, longRest: 900 }));
+}
+
+const getConfig = () => JSON.parse(localStorage.getItem("pomodoroConfig"));
+
+//Globals
+let timer = getConfig().timer;
 let mode = "focus";
+let pomo;
+let actualCycle = 0;
+let isFocus = false;
+
+const fillInputs = () => {
+	const c = getConfig();
+	document.getElementById("input-pomo").value = c.timer / 60;
+	document.getElementById("input-rest").value = c.rest / 60;
+	document.getElementById("input-long-rest").value = c.longRest / 60;
+};
 
 //CLOCK
 const showClock = () => {
@@ -24,7 +43,7 @@ const updateCycle = () => {
 
 		if (i < actualCycle) {
 			cycle.classList.add("completed");
-		} else if (i === actualCycle && actualCycle < cycles.length) {
+		} else if (i === actualCycle && actualCycle < cycles.length && isFocus) {
 			cycle.classList.add("actual");
 		}
 	});
@@ -39,32 +58,34 @@ const nextCycle = () => {
 //START FUNCTION
 const startClock = () => {
 	clearInterval(pomo);
-	if (mode === "focus") {
-		document.body.classList.remove("rest");
-	} else {
-		document.body.classList.add("rest");
-	}
-
+	document.body.classList.toggle("rest", mode !== "focus");
+	isFocus = mode == "focus";
+	updateCycle();
 	pomo = setInterval(() => {
 		timer--;
 		showClock();
-
 		if (timer === 0) {
 			clearInterval(pomo);
-			if (actualCycle === 4) {
-				mode = "longRest";
-				timer = 900;
-			} else {
-				mode = "shortRest";
-				timer = 300;
+			if (mode === "focus") {
+				nextCycle();
+				if (actualCycle === cycles.length) {
+					mode = "longRest";
+					timer = getConfig().longRest;
+					document.body.classList.toggle("long-rest", mode !== "focus");
+				} else {
+					mode = "shortRest";
+					timer = getConfig().rest;
+				}
+			} else if (mode === "shortRest" || mode === "longRest") {
+				if (actualCycle === cycles.length) {
+					resetClock();
+					return;
+				}
+				mode = "focus";
+				timer = getConfig().timer;
+				updateCycle();
 			}
 			startClock();
-		} else if (mode === "shortRest") {
-			mode = "focus";
-			timer = 1500;
-			startClock();
-		} else if (mode === "longRest") {
-			resetClock();
 		}
 	}, 1000);
 };
@@ -76,8 +97,9 @@ const pauseClock = () => {
 const resetClock = () => {
 	clearInterval(pomo);
 	actualCycle = 0;
-	timer = 1500;
+	timer = getConfig().timer;
 	mode = "focus";
+	isFocus = false;
 	document.body.classList.add("rest");
 	showClock();
 	updateCycle();
@@ -85,15 +107,45 @@ const resetClock = () => {
 
 //START/PAUSE/RESET EVENTLISTENER
 buttonsCont.addEventListener("click", (e) => {
-	if (e.target.id === "start-btn") {
-		startClock();
+	if (e.target.id === "start-btn") startClock();
+
+	if (e.target.id === "pause-btn") pauseClock();
+
+	if (e.target.id === "reset-btn") resetClock();
+});
+
+//POPUP OPEN/CLOSE
+popUp.addEventListener("click", (e) => {
+	if (e.target.closest("#settings-btn")) {
+		fillInputs();
+		modal.classList.add("is-open");
+	} else if (e.target.closest("#close-btn")) {
+		modal.classList.remove("is-open");
 	}
-	if (e.target.id === "pause-btn") {
-		pauseClock();
+});
+//SAVE USER INPUT
+saveBtn.addEventListener("click", () => {
+	const inputPomo = parseInt(document.getElementById("input-pomo").value);
+	const inputRest = parseInt(document.getElementById("input-rest").value);
+	const inputLong = parseInt(document.getElementById("input-long-rest").value);
+
+	if (!inputPomo || !inputRest || !inputLong) return;
+
+	//save inputs value to localStorage
+	localStorage.setItem(
+		"pomodoroConfig",
+		JSON.stringify({
+			timer: inputPomo * 60,
+			rest: inputRest * 60,
+			longRest: inputLong * 60,
+		}),
+	);
+
+	if (!pomo) {
+		timer = getConfig().timer;
+		showClock();
 	}
-	if (e.target.id === "reset-btn") {
-		resetClock();
-	}
+	modal.classList.remove("is-open");
 });
 
 showClock();

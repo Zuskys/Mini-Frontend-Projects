@@ -4,26 +4,65 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Pomodoro Timer</title>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@500&display=swap" rel="stylesheet" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+			integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+			crossorigin="anonymous"
+			referrerpolicy="no-referrer"
+		/>
 		<link rel="stylesheet" href="styles.css" />
 	</head>
 	<body class="rest">
-		<main>
-			<section class="session-section">
-				<div class="cycle"></div>
-				<div class="cycle"></div>
-				<div class="cycle"></div>
-				<div class="cycle"></div>
-			</section>
-			<section class="time-section">
-				<p id="clock"></p>
-				<div class="buttons">
-					<button id="start-btn">Start</button>
-					<button id="pause-btn">Pause</button>
-					<button id="reset-btn">Reset</button>
-				</div>
-			</section>
-		</main>
-
+		<div class="app-cont">
+			<header>
+				<h1>Pomodoro Clock</h1>
+				<nav class="navbar">
+					<button class="nav-btn" id="settings-btn">
+						<i class="fa-solid fa-gear"></i>
+					</button>
+					<!-- PopUp config  -->
+					<div class="overlay" id="modal">
+						<div class="popup">
+							<button class="nav-btn" id="close-btn">
+								<i class="fa-solid fa-x"></i>
+							</button>
+							<h3 class="modal-title">Set Pomodoro</h3>
+							<label>
+								Pomodoro (min)
+								<input type="number" id="input-pomo" min="1" max="60" />
+							</label>
+							<label>
+								Descanso corto (min)
+								<input type="number" id="input-rest" min="1" max="60" />
+							</label>
+							<label>
+								Descanso largo (min)
+								<input type="number" id="input-long-rest" min="1" max="60" />
+							</label>
+							<button id="save-config">Save</button>
+						</div>
+					</div>
+				</nav>
+			</header>
+			<main>
+				<section class="session-section">
+					<div class="cycle"></div>
+					<div class="cycle"></div>
+					<div class="cycle"></div>
+					<div class="cycle"></div>
+				</section>
+				<section class="time-section">
+					<h3 id="clock"></h3>
+					<div class="buttons">
+						<button id="start-btn">Start</button>
+						<button id="pause-btn">Pause</button>
+						<button id="reset-btn">Reset</button>
+					</div>
+				</section>
+			</main>
+		</div>
 		<script src="index.js"></script>
 	</body>
 </html>
