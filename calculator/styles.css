@@ -1,10 +1,33 @@
 :root {
-	/* MOBILE FIRST */
-	--calculator-width: 100%;
-	--calculator-max-width: 320px;
+	/* COLORS */
+	--bg: hsl(40, 15%, 18%);
+	--bg-body: hsl(35, 12%, 22%);
+	--highlight: hsl(35, 10%, 32%);
+	--border-color: hsl(35, 10%, 10%);
+	--screen-bg: hsl(102, 35%, 22%);
+	--screen-txt: hsl(108, 29%, 52%);
+	--screen-shadow: hsl(102, 40%, 12%);
+	--btn-number-bg: hsl(34, 7%, 44%);
+	--btn-number-shadow: hsl(35, 8%, 14%);
+	--btn-number-text: hsl(40, 30%, 88%);
+	--btn-operator-bg: hsl(25, 59%, 51%);
+	--btn-operator-shadow: hsl(26, 53%, 15%);
+	--btn-operator-text: hsl(35, 80%, 88%);
+	--btn-action-bg: hsl(201, 29%, 44%);
+	--btn-action-shadow: hsl(198, 12%, 16%);
+	--btn-action-text: hsl(195, 70%, 82%);
 
-	--result-height: 80px;
-	--buttons-height: 350px;
+	/* SIZES — MOBILE FIRST */
+	--calculator-width: 100%;
+	--calculator-max-width: 300px;
+	--result-height: 90px;
+	--buttons-height: 370px;
+	--border-radius-calc: 12px;
+	--border-radius-btn: 6px;
+	--btn-font-size: 1rem;
+	--screen-font-size: 2rem;
+	--gap: 8px;
+	--padding: 12px;
 }
 
 /* BASE */
@@ -12,6 +35,7 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+	font-family: "Share Tech Mono", monospace;
 }
 
 body {
@@ -19,30 +43,69 @@ body {
 	justify-content: center;
 	align-items: center;
 	min-height: 100vh;
-	background-color: #f5f5f5;
-	font-family: sans-serif;
+	background-color: var(--bg);
+	font-size: var(--font-size);
 }
 
-/* MAIN CALCULATOR WRAPPER */
 main {
 	width: var(--calculator-width);
 	max-width: var(--calculator-max-width);
 	display: flex;
 	flex-direction: column;
+	background-color: var(--bg-body);
+	border-radius: var(--border-radius-calc);
+	padding: var(--padding);
+	gap: var(--gap);
+	border-top: 2px solid var(--highlight);
+	border-left: 1px solid var(--border-color);
+	border-right: 1px solid var(--border-color);
+	border-bottom: 4px solid var(--border-color);
+	box-shadow: 0 8px 10px hsla(0, 0%, 0%, 0.28);
+}
+
+main::before {
+	content: "MODEL CX-84";
+	display: block;
+	text-align: center;
+	font-family: "Orbitron", monospace;
+	font-size: 0.8rem;
+	letter-spacing: 0.18em;
+	color: hsl(35, 15%, 42%);
+	padding-bottom: 4px;
 }
 
 /* RESULT SCREEN */
 #result-cont {
 	height: var(--result-height);
 	display: flex;
-	align-items: center;
+	flex-direction: column;
+	align-items: flex-end;
 	justify-content: flex-end;
-	padding: 0 12px;
-	background-color: aqua;
+	padding: 10px 14px;
+	border-radius: 4px;
+	border-top: 2px solid var(--screen-shadow);
+	border-left: 2px solid var(--screen-shadow);
+	border-right: 1px solid var(--highlight);
+	border-bottom: 1px solid var(--highlight);
+	background-color: var(--screen-bg);
+	box-shadow:
+		inset 0 2px 8px hsla(0, 0%, 0%, 0.5),
+		inset 0 0 20px hsla(108, 50%, 8%, 0.6);
+	position: relative;
+	overflow: hidden;
 }
 
 #result-txt {
-	font-size: 1.8rem;
+	max-width: 100%;
+	white-space: nowrap;
+	overflow-x: auto;
+	scrollbar-width: none;
+	font-size: var(--screen-font-size);
+	color: var(--screen-txt);
+	z-index: 1;
+}
+#result-txt::-webkit-scrollbar {
+	display: none;
 }
 
 /* BUTTONS CONTAINER */
@@ -50,35 +113,101 @@ main {
 	height: var(--buttons-height);
 }
 
-/* GRID */
 #grid {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
-	grid-template-rows: repeat(5, 1fr);
+	grid-template-rows: repeat(6, 1fr);
+	gap: var(--gap);
 	height: 100%;
 }
 .span {
 	grid-column: 1 / span 4;
-	grid-row: 5 / span 1;
+	grid-row: 6 / span 1;
 }
 
 /* BUTTONS */
 .calc-btn {
 	cursor: pointer;
-	border: 1px solid rgba(0, 0, 0, 0.1);
-	background: rgb(180, 204, 144);
-	font-size: 1.1rem;
+	border: none;
+	border-radius: var(--border-radius-btn);
+	font-size: var(--btn-font-size);
+	font-weight: bold;
+	transition:
+		transform 0.07s ease,
+		box-shadow 0.07s ease,
+		filter 0.07s ease;
+	user-select: none;
 }
 
-.calc-btn:hover {
-	background-color: rgba(0, 0, 0, 0.08);
+.calc-btn:active {
+	transform: translateY(3px);
+	filter: brightness(0.85);
+}
+
+.calc-btn[data-type="number"] {
+	background-color: var(--btn-number-bg);
+	color: var(--btn-number-text);
+	box-shadow: 0 4px 0 var(--btn-number-shadow);
+}
+.calc-btn[data-type="number"]:active {
+	box-shadow: 0 1px 0 var(--btn-number-shadow);
+}
+.calc-btn[data-type="operator"] {
+	background-color: var(--btn-operator-bg);
+	color: var(--btn-operator-text);
+	box-shadow: 0 4px 0 var(--btn-operator-shadow);
+}
+.calc-btn[data-type="operator"]:active {
+	box-shadow: 0 1px 0 var(--btn-operator-shadow);
+}
+.calc-btn[data-type="action"] {
+	background-color: var(--btn-action-bg);
+	color: var(--btn-action-text);
+	box-shadow: 0 4px 0 var(--btn-action-shadow);
+}
+.calc-btn[data-type="action"]:active {
+	box-shadow: 0 1px 0 var(--btn-action-shadow);
 }
 
 /*---MEDIA QUERIES---*/
+@media (min-width: 481px) {
+	:root {
+		--calculator-max-width: 340px;
+		--result-height: 100px;
+		--buttons-height: 410px;
+		--btn-font-size: 1.05rem;
+		--screen-font-size: 2.1rem;
+	}
+}
+
 @media (min-width: 768px) {
 	:root {
+		--calculator-max-width: 360px;
+		--result-height: 12vh;
+		--buttons-height: 55vh;
+		--border-radius-calc: 16px;
+		--border-radius-btn: 8px;
+		--btn-font-size: 1.15rem;
+		--screen-font-size: 2.4rem;
+		--gap: 10px;
+		--padding: 16px;
+	}
+}
+
+@media (min-width: 1024px) {
+	:root {
+		--calculator-max-width: 380px;
+		--screen-font-size: 2.6rem;
+		--gap: 11px;
+		--padding: 18px;
+	}
+}
+
+@media (min-width: 1440px) {
+	:root {
 		--calculator-max-width: 400px;
-		--result-height: 100px;
-		--buttons-height: 450px;
+		--screen-font-size: 2.8rem;
+		--gap: 12px;
+		--padding: 20px;
 	}
 }

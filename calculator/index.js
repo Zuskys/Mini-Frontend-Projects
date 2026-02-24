@@ -184,6 +184,7 @@ const getExpression = (value) => {
 //RENDER RESULT TEXT
 const updateDisplay = (value) => {
 	resultTxt.textContent = value;
+	resultTxt.scrollLeft = resultTxt.scrollWidth;
 };
 
 //CREATE  RENDER BTNS
@@ -196,9 +197,7 @@ function renderButtons() {
 			btn.textContent = i.label;
 			gridBtn.appendChild(btn);
 
-			if (i.label === "=") {
-				btn.classList.add("span");
-			}
+			if (i.label === "=") btn.classList.add("span");
 		});
 	});
 }
